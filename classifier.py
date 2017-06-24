@@ -13,10 +13,10 @@ class Clf:
             self.classifier = Classifier.SGD(config)
         elif self.config.classifier_method == 'random forest':
             self.classifier = Classifier.RandomForest(config)
-        elif self.config.classifier_method == 'bagging svc':
-            self.classifier = Classifier.BaggingSVC(config)
         elif self.config.classifier_method == 'logistic regression':
             self.classifier = Classifier.LogisticRegression(config)
+        elif self.config.classifier_method == 'dl':
+            self.classifier = Classifier.DL(config)
 
     def fit(self, X, y):
         self.classifier.fit(X, y)
@@ -25,7 +25,11 @@ class Clf:
         return self.classifier.predict(X)
 
     def setArgs(self, **kwargs):
-        self.classifier.setArgs(**kwargs)
+
+        if self.config.classifier_method == 'dl':
+            self.classifier.fit(kwargs['1'], kwargs['2'], kwargs['3'], kwargs['4'])
+        else:
+            self.classifier.setArgs(**kwargs)
 
     class _Parameters:
         classifier_method = ''

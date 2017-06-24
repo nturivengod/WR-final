@@ -49,12 +49,17 @@ def main(config):
     # train
     Utils.verbose_print('Training, method = {0}.'.format(config.get('CLASSIFIER', 'method')))
     clf = classifier.Clf(config)
-    clf.fit(train_X, train_y)
+    if clf.config.classifier_method == 'dl':
+        k = {'1':train_X, '2':train_y, '3':val_X,'4':val_y}
+        clf.setArgs(**k)
+    else:
+        clf.fit(train_X, train_y)
 
     # validate
     Utils.verbose_print('Validating.')
     result_y = clf.predict(val_X)
-    correction = Utils.correction(val_y, result_y)
+    print(result_y)
+    correction = Utils.correction(val_y,result_y)
     truth_table = Utils.truth_table(val_y, result_y)
     print('Correction:{0}'.format(correction))
     Utils.verbose_print(Utils.print_truth_table(truth_table))
